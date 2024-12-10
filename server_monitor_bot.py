@@ -1,5 +1,5 @@
 import psutil
-import time
+import asyncio
 import subprocess
 from telegram import Bot
 
@@ -7,7 +7,7 @@ from telegram import Bot
 BOT_TOKEN = "YOUR_BOT_API_TOKEN"
 CHANNEL_ID = "@YourChannelUsername"  # Ganti dengan username channel Anda
 
-def get_server_info():
+async def get_server_info():
     # CPU usage
     cpu_usage = psutil.cpu_percent(interval=1)
 
@@ -33,12 +33,12 @@ def get_server_info():
     )
     return server_info
 
-def send_to_telegram():
+async def send_to_telegram():
     bot = Bot(token=BOT_TOKEN)
-    message = get_server_info()
-    bot.send_message(chat_id=CHANNEL_ID, text=message, parse_mode="Markdown")
+    while True:
+        message = await get_server_info()
+        await bot.send_message(chat_id=CHANNEL_ID, text=message, parse_mode="Markdown")
+        await asyncio.sleep(600)  # Kirim setiap 600 detik (10 menit)
 
 if __name__ == "__main__":
-    while True:
-        send_to_telegram()
-        time.sleep(600)  # Kirim setiap 600 detik (10 menit)
+    asyncio.run(send_to_telegram())
