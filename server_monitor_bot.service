@@ -1,0 +1,11 @@
+[Unit]
+Description=Server Monitor Bot
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /path/to/server_monitor_bot.py
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
